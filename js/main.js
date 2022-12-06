@@ -3,6 +3,10 @@
 const key = "X36ZOwMdQHQULSUcBHhOE27bY9uyL5NDYpAAVq3KehhZdAX8bt";
 const secretKey = "bGrEU0kTzrrUPrycDWXj4NQgwWon4CPgoGkHqlOB";
 
+// Command to get your Bearer Token:
+// curl -d "grant_type=client_credentials&client_id=X36ZOwMdQHQULSUcBHhOE27bY9uyL5NDYpAAVq3KehhZdAX8bt&client_secret=bGrEU0kTzrrUPrycDWXj4NQgwWon4CPgoGkHqlOB" https://api.petfinder.com/v2/oauth2/token
+
+//Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJYMzZaT3dNZFFIUVVMU1VjQkhoT0UyN2JZOXV5TDVORFlwQUFWcTNLZWhoWmRBWDhidCIsImp0aSI6IjI2YzUyZmFjZTFmNGJmZTFlMTk2Y2I5MGEyMWZhNTNiM2RlYTJjYWJhYzkyYTliMmNjZmYyZTZmNWEzMTQ1NzNmNDkzYWUyZDBkNmU2NGRlIiwiaWF0IjoxNjcwMzU3MTE5LCJuYmYiOjE2NzAzNTcxMTksImV4cCI6MTY3MDM2MDcxOSwic3ViIjoiIiwic2NvcGVzIjpbXX0.zVTGgSsfQFQSAMyG9HPk1Tx4Bs-NfmNinNCmy68KXTm6cm6m9E1dFKLsIZq9QH59DeCC__ZwLbnA-0UET_IjmJmSozfyqMxk2zKNKmUKvn77Nyw4vHk8raBMjudROiqxvqIvlU17Fn4yYCD1rnt0wdw8iBO0rWGzpSabscvtJByl-7tunqwyPIxM2uz6oKGXmrSu4YS2BADt_yQXfTREByvOd7NdF4qVI3oDsGE1EDTTVg71v5pPQih2WOXs2cnjk0XjGM2M0mFQxGhqjAsgW42x-dl_HEMG46RgT57CScQNnirRhOvmeT5AmIcBQpaWOtBO1sJ8Jb0fi2HPLFPxUA
 
 const petForm = document.querySelector('#pet-form');
 
@@ -12,16 +16,27 @@ petForm.addEventListener('submit', fetchAnimals);
 function fetchAnimals(e) {
     e.preventDefault();
 
+    const myHeaders = new Headers();
+
+    //copy and paste Bearer Token inside this section like so:
+    myHeaders.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJYMzZaT3dNZFFIUVVMU1VjQkhoT0UyN2JZOXV5TDVORFlwQUFWcTNLZWhoWmRBWDhidCIsImp0aSI6IjI2YzUyZmFjZTFmNGJmZTFlMTk2Y2I5MGEyMWZhNTNiM2RlYTJjYWJhYzkyYTliMmNjZmYyZTZmNWEzMTQ1NzNmNDkzYWUyZDBkNmU2NGRlIiwiaWF0IjoxNjcwMzU3MTE5LCJuYmYiOjE2NzAzNTcxMTksImV4cCI6MTY3MDM2MDcxOSwic3ViIjoiIiwic2NvcGVzIjpbXX0.zVTGgSsfQFQSAMyG9HPk1Tx4Bs-NfmNinNCmy68KXTm6cm6m9E1dFKLsIZq9QH59DeCC__ZwLbnA-0UET_IjmJmSozfyqMxk2zKNKmUKvn77Nyw4vHk8raBMjudROiqxvqIvlU17Fn4yYCD1rnt0wdw8iBO0rWGzpSabscvtJByl-7tunqwyPIxM2uz6oKGXmrSu4YS2BADt_yQXfTREByvOd7NdF4qVI3oDsGE1EDTTVg71v5pPQih2WOXs2cnjk0XjGM2M0mFQxGhqjAsgW42x-dl_HEMG46RgT57CScQNnirRhOvmeT5AmIcBQpaWOtBO1sJ8Jb0fi2HPLFPxUA');
+
     // Get User Input
     const animal = document.querySelector('#animal').value;
     const zip = document.querySelector('#zip').value;
 
     //Fetch Pets
-    fetchJson(`http://api.petfinder.com/pet.find?format=json&key=X36ZOwMdQHQULSUcBHhOE27bY9uyL5NDYpAAVq3KehhZdAX8bt&animal=${animal}&location=${zip}&callback=callback`, {
-        jsonpCallbackFunction: 'callback'
+    fetch(`https://api.petfinder.com/v2/animals?type=${animal}&location=${zip}`, {
+      method: 'GET',
+      headers: myHeaders,
     })
     .then(res => res.json())
-    .then(data => showAnimals(data.petfinder.pets.pet))
+    .then(data => {
+
+      console.log(data);
+      //showAnimals(data)
+      
+    })
     .catch(err => console.log(err));
 };
 
